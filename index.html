@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XBAOS - 个人主页</title>
+    
+    <style>
+        /* 基础样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* 颜色定义 */
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --neutral: #f0f4f8;
+            --text-dark: #4b5563;
+            --text-light: #6b7280;
+            --white: #ffffff;
+        }
+        
+        body {
+            background-color: var(--neutral);
+            color: var(--text-dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* 容器样式 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 轻拟态样式 */
+        .neumorphic {
+            background: var(--neutral);
+            box-shadow: 9px 9px 16px rgba(163, 177, 198, 0.6),
+                       -9px -9px 16px rgba(255, 255, 255, 0.5);
+        }
+        
+        .neumorphic-inset {
+            background: var(--neutral);
+            box-shadow: inset 5px 5px 10px rgba(163, 177, 198, 0.6),
+                       inset -5px -5px 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .neumorphic-btn {
+            background: var(--neutral);
+            box-shadow: 5px 5px 10px rgba(163, 177, 198, 0.6),
+                       -5px -5px 10px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .neumorphic-btn:hover {
+            box-shadow: 7px 7px 14px rgba(163, 177, 198, 0.7),
+                       -7px -7px 14px rgba(255, 255, 255, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .neumorphic-btn:active {
+            box-shadow: inset 5px 5px 10px rgba(163, 177, 198, 0.6),
+                       inset -5px -5px 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(0);
+        }
+        
+        /* 导航栏样式 */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(240, 244, 248, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 16px 0;
+            margin-bottom: 32px;
+            transition: padding 0.3s ease;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: bold;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .nav-links {
+            display: none;
+            gap: 24px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .mobile-menu {
+            display: none;
+            margin-top: 16px;
+            padding: 16px;
+            border-radius: 16px;
+        }
+        
+        .mobile-menu a {
+            display: block;
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .mobile-menu a:last-child {
+            margin-bottom: 0;
+        }
+        
+        .mobile-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* 主要内容样式 */
+        section {
+            margin-bottom: 64px;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+        
+        .card {
+            border-radius: 24px;
+            padding: 32px;
+        }
+        
+        /* 首页区域 */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .hero-content {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: bold;
+            margin-bottom: 16px;
+            line-height: 1.2;
+        }
+        
+        .hero-title span {
+            color: var(--primary);
+        }
+        
+        .hero-desc {
+            font-size: 18px;
+            color: var(--text-light);
+            margin-bottom: 32px;
+            max-width: 600px;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #5254e0;
+        }
+        
+        .profile-container {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .profile-picture {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 48px;
+        }
+        
+        /* 关于区域 */
+        .about-text {
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        
+        .skills-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        
+        .skill-card {
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.3s ease;
+        }
+        
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .skill-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .skill-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        /* 项目区域 */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+        
+        .project-card {
+            border-radius: 24px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .project-image {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 32px;
+        }
+        
+        .project-content {
+            padding: 24px;
+        }
+        
+        .project-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .project-desc {
+            color: var(--text-light);
+            margin-bottom: 16px;
+        }
+        
+        .project-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .project-link span {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .project-link:hover span {
+            transform: translateX(4px);
+        }
+        
+        .more-projects {
+            text-align: center;
+            margin-top: 32px;
+        }
+        
+        /* 页脚样式 */
+        footer {
+            padding: 32px 0;
+            background-color: var(--neutral);
+        }
+        
+        .footer-content {
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+        
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 16px;
+        }
+        
+        .footer-logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .footer-desc {
+            color: var(--text-light);
+            margin-bottom: 24px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        
+        .footer-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+        
+        .copyright {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* 响应式样式 */
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            
+            .menu-btn {
+                display: none;
+            }
+            
+            .hero {
+                flex-direction: row;
+                gap: 48px;
+            }
+            
+            .hero-content {
+                text-align: left;
+                margin-bottom: 0;
+                flex: 1;
+            }
+            
+            .hero-buttons {
+                justify-content: flex-start;
+            }
+            
+            .skills-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .mobile-menu.active {
+                display: block;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <header>
+        <div class="container">
+            <nav>
+                <!-- 网站名称 -->
+                <a href="#home" class="logo">
+                    <div class="logo-icon neumorphic">
+                        <span>X</span>
+                    </div>
+                    <span>XBAOS</span>
+                </a>
+                
+                <!-- 导航链接 - 桌面版 -->
+                <div class="nav-links">
+                    <a href="#home" class="neumorphic-btn">首页</a>
+                    <a href="#about" class="neumorphic-btn">关于</a>
+                    <a href="#projects" class="neumorphic-btn">项目</a>
+                </div>
+                
+                <!-- 汉堡菜单 - 移动版 -->
+                <button id="menuBtn" class="menu-btn neumorphic-btn">
+                    <span>☰</span>
+                </button>
+            </nav>
+            
+            <!-- 移动端菜单 -->
+            <div id="mobileMenu" class="mobile-menu neumorphic">
+                <a href="#home">首页</a>
+                <a href="#about">关于</a>
+                <a href="#projects">项目</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 首页/英雄区域 -->
+        <section id="home">
+            <div class="card neumorphic">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            你好，我是<br><span>XBAOS</span>
+                        </h1>
+                        <p class="hero-desc">
+                            欢迎来到我的个人主页。这里展示了我的作品、技能和兴趣爱好。
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="#projects" class="btn btn-primary neumorphic-btn">
+                                查看我的项目
+                            </a>
+                            <a href="#about" class="btn neumorphic-btn">
+                                关于我
+                            </a>
+                        </div>
+                    </div>
+                    <div class="profile-container neumorphic">
+                        <div class="profile-picture neumorphic-inset">
+                            <span>X</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于区域 -->
+        <section id="about">
+            <h2 class="section-title">关于我</h2>
+            <div class="card neumorphic">
+                <p class="about-text">
+                    你好！我是XBAOS，一个对技术充满热情的开发者/设计师/创作者。我热爱学习新事物，探索技术的边界，并将创意转化为现实。
+                </p>
+                <p class="about-text">
+                    这个网站是我展示作品和分享想法的空间。希望通过这里，能让你更好地了解我和我的工作。
+                </p>
+                
+                <!-- 技能卡片 -->
+                <h3 class="skills-title">我的技能</h3>
+                <div class="skills-grid">
+                    <!-- 技能卡片1 -->
+                    <div class="skill-card neumorphic">
+                        <div class="skill-icon neumorphic">
+                            <span>💻</span>
+                        </div>
+                        <h4 class="skill-title">编程开发</h4>
+                        <p>熟练掌握多种编程语言和框架，能够开发高效、可靠的应用程序。</p>
+                    </div>
+                    
+                    <!-- 技能卡片2 -->
+                    <div class="skill-card neumorphic">
+                        <div class="skill-icon neumorphic">
+                            <span>🎨</span>
+                        </div>
+                        <h4 class="skill-title">设计创意</h4>
+                        <p>擅长UI/UX设计，注重用户体验，创造美观且实用的设计作品。</p>
+                    </div>
+                    
+                    <!-- 技能卡片3 -->
+                    <div class="skill-card neumorphic">
+                        <div class="skill-icon neumorphic">
+                            <span>🔧</span>
+                        </div>
+                        <h4 class="skill-title">问题解决</h4>
+                        <p>具备良好的分析和解决问题的能力，能够应对各种技术挑战。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 项目区域 -->
+        <section id="projects">
+            <h2 class="section-title">我的项目</h2>
+            
+            <div class="projects-grid">
+                <!-- 项目卡片1 -->
+                <div class="project-card neumorphic">
+                    <div class="project-image neumorphic-inset">
+                        <span>📱</span>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">项目名称一</h3>
+                        <p class="project-desc">这是一个关于移动应用的项目，使用了现代技术栈，实现了丰富的功能和流畅的用户体验。</p>
+                        <a href="#" class="project-link">
+                            查看详情 <span>→</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 项目卡片2 -->
+                <div class="project-card neumorphic">
+                    <div class="project-image neumorphic-inset">
+                        <span>🌐</span>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">项目名称二</h3>
+                        <p class="project-desc">这是一个关于网站开发的项目，注重响应式设计和性能优化，适配各种设备屏幕。</p>
+                        <a href="#" class="project-link">
+                            查看详情 <span>→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 查看更多按钮 -->
+            <div class="more-projects">
+                <button class="btn neumorphic-btn">
+                    查看更多项目
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content neumorphic">
+                <div class="footer-logo">
+                    <div class="footer-logo-icon neumorphic">
+                        <span>X</span>
+                    </div>
+                    <span>XBAOS</span>
+                </div>
+                <p class="footer-desc">感谢访问我的个人主页，希望你能在这里找到有价值的内容。</p>
+                <div class="footer-links">
+                    <a href="#home">首页</a>
+                    <a href="#about">关于</a>
+                    <a href="#projects">项目</a>
+                </div>
+                <p class="copyright">© 2023 XBAOS. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 移动端菜单切换
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                // 关闭移动菜单（如果打开）
+                if (mobileMenu.classList.contains('active')) {
+                    mobileMenu.classList.remove('active');
+                }
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // 滚动时导航栏效果
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.style.padding = '8px 0';
+            } else {
+                header.style.padding = '16px 0';
+            }
+        });
+    </script>
+</body>
+</html>
+    
